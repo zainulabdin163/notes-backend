@@ -1,12 +1,17 @@
-import expess, { Request, Response } from "express";
+import app from "./app";
+import mongoose from "mongoose";
+import { env } from "./utils";
 
-const app = expess();
-const port = 3000;
+const port = env.PORT || 5000;
+const connectionUrl = env.MONGO_CONNECTION_STRING;
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello, World!");
-});
+mongoose
+  .connect(connectionUrl)
+  .then(() => {
+    console.log("DB Connected!");
 
-app.listen(port, () => {
-  console.log(`Server running on port: ${port}`);
-});
+    app.listen(port, () => {
+      console.log(`Server running on port: ${port}.`);
+    });
+  })
+  .catch(console.error);
